@@ -1,9 +1,16 @@
-## Configuração do Arquivo `.env`
+# Configuração do Ambiente de Desenvolvimento
 
-Este projeto utiliza um arquivo `.env` para armazenar informações sensíveis e específicas do ambiente, como credenciais do banco de dados e chaves de API. O uso do `.env` ajuda a manter essas informações fora do código-fonte, garantindo maior segurança e flexibilidade.
+Para executar este projeto no seu ambiente local, você precisará configurar algumas variáveis de ambiente em sua IDE ou em seu sistema operacional
 
-### **Passos para configurar o `.env`**
-1. Na raiz do projeto, crie um arquivo chamado `.env`.
-2. Copie o conteúdo do arquivo de exemplo `env.example` (se disponível) para o `.env`:
-   ```bash
-   cp .env.example .env
+---
+
+## Variáveis de Ambiente Necessárias
+
+Antes de iniciar o projeto, configure as seguintes variáveis de ambiente:
+
+| Nome da Variável | Descrição                                  | Exemplo                                |
+|-------------------|-------------------------------------------|----------------------------------------|
+| `DB_URL`          | URL de conexão com o banco de dados       | `jdbc:postgresql://localhost:5432/db` |
+| `DB_USERNAME`     | Nome de usuário do banco de dados         | `admin`                                |
+| `DB_PASSWORD`     | Senha do banco de dados                  | `senha_secreta`                        |
+
