@@ -185,7 +185,8 @@
         1.0,
         1.5,
         2.0,
-        2.70887
+        2.70887,
+        7.0
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -489,7 +490,7 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "Power-Management.step",
       "svg": "",
       "vrml": ""
     },
@@ -602,6 +603,10 @@
     [
       "d6c15c0e-de26-4e7f-af12-c66df65baaf0",
       "Sensor de Tensão"
+    ],
+    [
+      "09fece19-353e-48d4-9ac9-7bb06618577b",
+      "Sensor de Corrente"
     ]
   ],
   "text_variables": {}
