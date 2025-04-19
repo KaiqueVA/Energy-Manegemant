@@ -24,6 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "energy_calculator.h"
 
 /* USER CODE END Includes */
 
@@ -45,7 +46,19 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+typedef enum
+{
+	IDLE,
+	READING,
+	ADC_COMPLETE,
+	PROCESSING,
+	DATA_PROCESSING,
 
+}state_t;
+
+uint8_t flag_adc_complete = 0;
+uint8_t flag_time_out = 0;
+adc_data_t adc_data;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,7 +80,17 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+	uint16_t buffer[1024];
 
+	energy_engine_t energy_engine={
+			.hadc=&hadc1,
+			.buffer=buffer,
+			.size=512
+	};
+	adc_calibration_t adc_calibration;
+
+	state_t state = READING;
+	uint32_t tickAnt = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -91,13 +114,51 @@ int main(void)
   MX_DMA_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-
+  init_energy_engine(&energy_engine);
+  set_energy_calibration(&adc_calibration, 11.5, 460, 1.64, 1.66);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	switch(state)
+	{
+		case IDLE:
+			if(flag_adc_complete == 1)
+			{
+				state = ADC_COMPLETE;
+				flag_adc_complete = 0;
+			}
+			break;
+		case READING:
+			state_adc_reader(&energy_engine);
+			state = IDLE;
+			break;
+		case ADC_COMPLETE:
+			adc_buffer_separator(&adc_data, &adc_calibration, energy_engine.buffer, energy_engine.size);
+			state = PROCESSING;
+		case PROCESSING:
+			if(flag_time_out == 1)
+				state = DATA_PROCESSING;
+			else
+				state = READING;
+
+			state_energy_calculator(&adc_data, &adc_calibration, energy_engine.size);
+			break;
+		case DATA_PROCESSING:
+			// Process data
+			// ...
+			HAL_Delay(1000);
+			state = READING;
+			break;
+	}
+
+	if(HAL_GetTick() - tickAnt > 5000)
+	{
+		tickAnt = HAL_GetTick();
+		flag_time_out = 1;
+	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
