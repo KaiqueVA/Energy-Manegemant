@@ -1,0 +1,32 @@
+# Pastas de build
+/Debug/
+/Release/
+
+# Arquivos temporários e de configuração local
+.settings/
+.metadata/
+
+# Arquivos específicos do Eclipse/CubeIDE
+.cproject
+.project
+.mxproject
+*.launch
+
+# Arquivos de build auxiliares
+*.o
+*.d
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.srec
+*.log
+
+# Arquivos de backup
+*~
+*.bak
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
