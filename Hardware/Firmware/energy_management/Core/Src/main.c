@@ -20,12 +20,13 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "energy_calculator.h"
-
+#include "log_debug.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -113,6 +114,7 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   init_energy_engine(&energy_engine);
   set_energy_calibration(&adc_calibration, 11.5, 460, 1.64, 1.66);
@@ -149,6 +151,8 @@ int main(void)
 		case DATA_PROCESSING:
 			// Process data
 			// ...
+			LOG_INFO("Tensão eficaz: %.2f V | Corrente eficaz: %.2f A | Potencia Aparente %.2f VA | Potencia Ativa: %.2f W | Potencia Reativa %.2f | Fator de Potencia %.2f",
+					adc_data.vEficaz, adc_data.iEficaz, adc_data.pAparente, adc_data.pAtiva, adc_data.pReativa, adc_data.fatorPotencia);
 			HAL_Delay(1000);
 			state = READING;
 			break;
