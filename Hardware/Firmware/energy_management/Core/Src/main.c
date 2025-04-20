@@ -115,6 +115,7 @@ int main(void)
   MX_DMA_Init();
   MX_ADC1_Init();
   MX_USART2_UART_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   init_energy_engine(&energy_engine);
   set_energy_calibration(&adc_calibration, 11.5, 460, 1.64, 1.66);
