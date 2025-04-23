@@ -1,0 +1,58 @@
+.main-login-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #111;
+    color: #eee;
+
+    .login-title {
+        font-size: 1.1em;
+        margin: 1.5em;
+        font-weight: 400;
+        opacity: .8;
+        user-select: none;
+        font-family: Poppins;
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-grow: 1;
+        gap: 2em;
+        padding: 3em;
+        width: 100%;
+
+        .title {
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        .form-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2em;
+
+            .inputs {
+                display: flex;
+                flex-direction: column;
+                gap: 1em;
+                width: 100%;
+            }
+
+            .form-submit {
+                background-color: #223;
+                flex-shrink: 0;
+                border-radius: .75em;
+                width: 50%;
+                min-width: fit-content;
+                padding: .5em 2em;
+                font-size: 1.3em;
+                font-weight: 500;
+                cursor: pointer;
+                user-select: none;
+            }
+        }
+    }
+}

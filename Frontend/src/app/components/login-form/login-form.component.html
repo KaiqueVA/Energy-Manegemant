@@ -1,11 +1,17 @@
-<form class="flex flex-col gap-3 bg-glass text-white py-10 w-[40vw] px-16">
-    <h1 class="text-center font-bold text-3xl">Entrar no <br> PowerPeak Dash</h1>
-    <hr>
-    <div class="flex flex-col items-center justify-center py-6">
-        <div class="flex flex-col gap-6 w-3/4 px-5">
-            <app-custom-input [id]="'email'" [type]="'text'" [label]="'Email ou nome de usuário'" [placeholder]="'Email ou nome de usuário'"></app-custom-input>
-            <app-custom-input [id]="'senha'" [type]="'password'" [label]="'Senha'" [placeholder]="'Senha'"></app-custom-input>
+<main class="main-login-form">
+    <h1 class="login-title">PowerPeak</h1>
+    <form class="login-form">
+        <h1 class="title">Entrar</h1>
+        <div class="form-content">
+            <ul class="inputs">
+                <app-custom-input [id]="'email'" [type]="'text'" [placeholder]="'Email ou nome de usuário'"></app-custom-input>
+                <app-custom-input [id]="'senha'" [type]="'password'" [placeholder]="'Senha'"></app-custom-input>
+            </ul>
+            <button class="form-submit">Entrar</button>
+            <section>
+                <button>Esqueci minha senha</button>
+                <button>Ainda não tenho um cadastro</button>
+            </section>
         </div>
-        <button class="bg-gray-800 rounded-full w-4/5 p-4 text-xl font-semibold mt-12">Entrar</button>
-    </div>
-</form>
+    </form>
+</main>

@@ -7,7 +7,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './custom-input.component.scss'
 })
 export class CustomInputComponent {
-  @Input() label: string = '';
   @Input() type: string = '';
   @Input() value: string = '';
   @Input() placeholder: string = '';
