@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GraficoConsumoComponent } from './grafico-consumo.component';
+import { GaugeConsumoComponent } from './gauge-consumo.component';
 
-describe('GraficoConsumoComponent', () => {
-  let component: GraficoConsumoComponent;
-  let fixture: ComponentFixture<GraficoConsumoComponent>;
+describe('GaugeConsumoComponent', () => {
+  let component: GaugeConsumoComponent;
+  let fixture: ComponentFixture<GaugeConsumoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GraficoConsumoComponent]
+      imports: [GaugeConsumoComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GraficoConsumoComponent);
+    fixture = TestBed.createComponent(GaugeConsumoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,17 @@
+<div class="grid grid-cols-2 items-center gap-6 bg-dashboard-block text-white p-6 w-full h-full">
+    <svg width="175" height="175" viewBox="0 0 200 200">
+      <g *ngFor="let p of paths">
+        <path [attr.d]="p.d" [attr.fill]="p.color" />
+      </g>
+    
+      <!-- Círculo central para a rosquinha -->
+      <circle cx="100" cy="100" r="50" fill="#333" />
+    </svg>
+    <div>
+        <div *ngFor="let comodo of data" class="flex gap-2 items-center">
+            <div [style]="'background-color:'+comodo.color" class="bg-blue-500 h-5 w-5 rounded">
+            </div>
+            <p>{{comodo.label}} ({{comodo.value}}%)</p>
+        </div>
+    </div>
+</div>
