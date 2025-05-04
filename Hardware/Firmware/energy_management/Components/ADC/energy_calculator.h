@@ -9,6 +9,8 @@
 
 // ========== Includes ========== //
 
+#include "hw_adc_reader.h"
+
 // ========== Configurações ========== //
 
 
@@ -40,10 +42,12 @@ typedef struct
 	float vData[512];
 	float iData[512];
 
+	float vAVG;
 	float vEficaz;
 	float vMax;
 	float vMin;
 
+	float iAVG;
 	float iEficaz;
 	float iMax;
 	float iMin;
