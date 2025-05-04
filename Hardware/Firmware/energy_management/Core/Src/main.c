@@ -20,13 +20,17 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdlib.h>
 #include "energy_calculator.h"
 #include "log_debug.h"
+#include "data_processing.h"
+#include "comms.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,12 +58,12 @@ typedef enum
 	ADC_COMPLETE,
 	PROCESSING,
 	DATA_PROCESSING,
+	SENDING,
 
 }state_t;
 
 uint8_t flag_adc_complete = 0;
 uint8_t flag_time_out = 0;
-adc_data_t adc_data;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,9 +93,14 @@ int main(void)
 			.size=512
 	};
 	adc_calibration_t adc_calibration;
+	adc_data_t adc_data;
 
+	COMMS_AT_Command_t command = AT_INIT;
+	COMMS_State_t comms_state = COMMS_STATE_IDLE;
 	state_t state = READING;
 	uint32_t tickAnt = 0;
+	float AT_data[6];
+	uint16_t size = 6;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -116,9 +125,12 @@ int main(void)
   MX_ADC1_Init();
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
+  float ical = 11.5;
   init_energy_engine(&energy_engine);
-  set_energy_calibration(&adc_calibration, 11.5, 460, 1.64, 1.66);
+  set_energy_calibration(&adc_calibration, ical, 460, 1.65, 1.66);
+  COMMS_Init(&comms_state);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -132,6 +144,10 @@ int main(void)
 			{
 				state = ADC_COMPLETE;
 				flag_adc_complete = 0;
+			}
+			if(COMMS_Process(&command, &comms_state)== 1)
+			{
+				state = READING;
 			}
 			break;
 		case READING:
@@ -150,13 +166,19 @@ int main(void)
 			state_energy_calculator(&adc_data, &adc_calibration, energy_engine.size);
 			break;
 		case DATA_PROCESSING:
-			// Process data
-			// ...
-			LOG_INFO("Tensão eficaz: %.2f V | Corrente eficaz: %.2f A | Potencia Aparente %.2f VA | Potencia Ativa: %.2f W | Potencia Reativa %.2f | Fator de Potencia %.2f",
-					adc_data.vEficaz, adc_data.iEficaz, adc_data.pAparente, adc_data.pAtiva, adc_data.pReativa, adc_data.fatorPotencia);
-			HAL_Delay(1000);
+			data_processing(&adc_data, AT_data);
+
+			state = SENDING;
+			break;
+
+		case SENDING:
+			command = AT_SEND;
+			COMMS_SendCommand(&command, AT_data, size);
 			state = READING;
 			break;
+
+
+
 	}
 
 	if(HAL_GetTick() - tickAnt > 5000)
