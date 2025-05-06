@@ -12,10 +12,11 @@ public interface MeasurementMapper {
     Measurement toEntity(MeasurementDTO dto);
     MeasurementDTO toDTO(Measurement entity);
 
-    default Integer map(UUID value) {
-        return value != null ? value.hashCode() : null;
+    default String map(UUID value) {
+        return value != null ? value.toString() : null;
     }
-    default UUID map(Integer value) {
-        return value != null ? UUID.nameUUIDFromBytes(value.toString().getBytes()) : null;
+
+    default UUID map(String value) {
+        return value != null ? UUID.fromString(value) : null;
     }
 }
