@@ -25,7 +25,6 @@ float *data = NULL;
 uint16_t size = 0;
 char buffer[12] = "";
 uint8_t flag_receive = 0;
-uint8_t flag_DMA_rx_enable = 0;
 
 // ========== Funções Internas ========== //
 
