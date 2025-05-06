@@ -82,7 +82,7 @@ void adc_buffer_separator(adc_data_t *data, adc_calibration_t *calc, uint16_t *b
 
 		v_data[i] = buffer[i * 2];
 		i_data[i] = buffer[i * 2 + 1];
-		//i_data[i] = iir(i_data[i]);
+		//i_data[i] = iir(i_data[i]); // IIR filter temporarily disabled for testing raw ADC data processing.
 
 		data->vData[i] = v_data[i];
 		data->vData[i] = (((v_data[i])*(3.3/4095.0)) - calc->offsetV) * calc->calV;
