@@ -104,9 +104,6 @@ bool COMMS_Process(COMMS_AT_Command_t *command, COMMS_State_t *state)
 
 	switch(*command)
 	{
-	case AT_INIT:
-		//HW_COMMS_Transmit("AT+INIT\r\n", 9);
-		break;
 	case AT_SEND:
 		if(flag_send == 0)
 		{
@@ -119,6 +116,12 @@ bool COMMS_Process(COMMS_AT_Command_t *command, COMMS_State_t *state)
 			*command = AT_STATUS;
 			flag_send = 0;
 			return true;
+		}
+		if(HW_COMMS_TimeoutExpired())
+		{
+			flag_send = 1;
+			break;
+			return false;
 		}
 
 
