@@ -29,9 +29,17 @@ typedef enum
 {
 	AT_INIT,
 	AT_SEND,
+	AT_RELE,
 	AT_STATUS,
 	AT_RESET,
 } COMMS_AT_Command_t;
+
+typedef enum {
+    COMMS_CMD_NONE,
+    COMMS_CMD_OK,
+    COMMS_CMD_RELE_ON,
+    COMMS_CMD_RELE_OFF
+} COMMS_ParsedCmd_t;
 
 
 // ========== Estruturas ========== //
