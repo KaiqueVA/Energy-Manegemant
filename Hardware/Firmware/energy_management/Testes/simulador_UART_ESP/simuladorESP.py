@@ -2,6 +2,7 @@ import serial
 import time
 import requests
 import os
+import time
 
 # === CONFIGURAÇÃO SERIAL E HTTP ===
 COM_PORT = 'COM3'          # Altere para sua porta
@@ -67,26 +68,55 @@ def parse_command(cmd):
 
     return "NO"
 
+
+def esperar_ok(ser, timeout=2):
+    
+    start_time = time.time()
+    while True:
+        if ser.in_waiting:
+            data = ser.readline().decode(errors='ignore').strip()
+            print(f"Resposta do ESP: {data}")
+            if data == "OK":
+                print("Recebido OK, continuando...")
+                return True  
+        if time.time() - start_time > timeout:
+            print("Timeout esperando OK!")
+            return False  
+    
+
 # === LOOP PRINCIPAL ===
 def simulate_esp():
-    try:
-        response = requests.post(LOGIN_ENDPOINT, json=payload)
-        if response.status_code == 200:
-            print("Login realizado com sucesso!")
-            print("Token ou resposta:", response.json())
-        else:
-            print(f"Erro ao fazer login: {response.status_code}")
-            print(response.text)
+    # try:
+    #     response = requests.post(LOGIN_ENDPOINT, json=payload)
+    #     if response.status_code == 200:
+    #         print("Login realizado com sucesso!")
+    #         print("Token ou resposta:", response.json())
+    #     else:
+    #         print(f"Erro ao fazer login: {response.status_code}")
+    #         print(response.text)
     
-    except requests.exceptions.RequestException as e:
-        print(f"Erro na requisição: {e}")
+    # except requests.exceptions.RequestException as e:
+    #     print(f"Erro na requisição: {e}")
         
 
-    
+    last_time_trigger = time.time()
+    value = False
     try:
         with serial.Serial(COM_PORT, BAUD_RATE, timeout=1) as ser:
             print(f"Simulador AT em {COM_PORT} @ {BAUD_RATE}")
             while True:
+                current_time = time.time()
+                if current_time - last_time_trigger >= 30:
+                    print(f"Comando enviado: {'AT+RELE_ON' if value else 'AT+RELE_OFF'}")
+                    if value == True:
+                        ser.write(('AT+RELE_ON' + "\r\n").encode())
+                        value = False
+                    else:
+                        value = True
+                        ser.write(('AT+RELE_OFF' + "\r\n").encode())
+                    esperar_ok(ser, 2)
+                    last_time_trigger = current_time
+                    
                 if ser.in_waiting:
                     data = ser.readline().decode(errors='ignore')
                     response = parse_command(data)
@@ -120,7 +150,7 @@ def simulate_esp():
                     else:
                         print(f"{data.strip()}")
                         time.sleep(0.1)
-                        ser.write((response + "\r\n").encode())
+                        ser.write((response + "\r\n        ").encode())
                         print(f"{response}")
     except serial.SerialException as e:
         print(f"Erro serial: {e}")
