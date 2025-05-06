@@ -7,11 +7,12 @@ static volatile bool hw_timeout_flag = false;
 
 
 
-//HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-//	if (huart->Instance == USART1) {
-//		flag_receive = 1;
-//	}
-//}
+HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	if (huart->Instance == USART1) {
+		flag_receive = 1;
+
+	}
+}
 
 bool HW_COMMS_Transmit(uint8_t *data, uint16_t length) {
     return (HAL_UART_Transmit(&huart1, data, length, 1000) == HAL_OK);
