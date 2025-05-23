@@ -11,5 +11,5 @@ import { HistoricoComponent } from '../../components/historico/historico.compone
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-
+  username = sessionStorage.getItem('name')
 }

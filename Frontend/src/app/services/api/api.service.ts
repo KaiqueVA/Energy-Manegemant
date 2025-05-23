@@ -1,0 +1,44 @@
+import { Injectable } from '@angular/core';
+import { User } from '../../classes/user';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ApiService {
+  api_url = 'http://localhost:8080/';
+  api_token = '123';
+
+  constructor() {}
+
+  async fetchRegister(user: User) {
+    return fetch(this.api_url + 'auth/register', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + this.api_token,
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        sessionStorage.setItem('token', result.token);
+        sessionStorage.setItem('name', result.name);
+        return true;
+      })
+      .catch(error => console.error("Erro ao registar!", error));
+  }
+
+  fetchMeasurements() {
+    fetch(this.api_url + 'auth/register', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+      });
+  }
+}
