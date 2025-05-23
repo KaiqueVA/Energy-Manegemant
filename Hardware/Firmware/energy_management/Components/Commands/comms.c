@@ -25,6 +25,7 @@ float *data = NULL;
 uint16_t size = 0;
 char buffer[12] = "";
 uint8_t flag_receive = 0;
+uint8_t flag_send = 0;
 
 // ========== Funções Internas ========== //
 
@@ -53,32 +54,42 @@ COMMS_ParsedCmd_t COMMS_ParseReceivedBuffer(void)
 
     if (strstr(buffer, "AT+RELE_ON") != NULL)
     {
+    	memset(buffer, 0, sizeof(buffer));
         HW_COMMS_Transmit((uint8_t *)"OK\r\n", 4);
         result = COMMS_CMD_RELE_ON;
+        memset(buffer, 0, sizeof(buffer));
 
     }
     else if (strstr(buffer, "AT+RELE_OFF") != NULL)
     {
+    	memset(buffer, 0, sizeof(buffer));
         HW_COMMS_Transmit((uint8_t *)"OK\r\n", 4);
         result = COMMS_CMD_RELE_OFF;
+
     }
     else if (strstr(buffer, "OK\r\n") != NULL)
     {
         result = COMMS_CMD_OK;
+        memset(buffer, 0, sizeof(buffer));
     }
 
     flag_receive = 0;
-    //memset(buffer, 0, sizeof(buffer));
     return result;
 }
 
 // ========== Funções Públicas ========== //
 void COMMS_Init(COMMS_State_t *state)
 {
+	uint16_t prev_tick = HAL_GetTick();
 	HW_COMMS_Transmit((uint8_t*)"AT+INIT\r\n", 9);
+	HAL_UART_Receive_DMA(&huart1, (uint8_t*)buffer, 12);
 	while(1)
 	{
-		HAL_UART_Receive_DMA(&huart1, (uint8_t*)buffer, 12);
+		if(HAL_GetTick() - prev_tick > 1000)
+		{
+			HW_COMMS_Transmit((uint8_t*)"AT+INIT\r\n", 9);
+			prev_tick = HAL_GetTick();
+		}
 		if(strstr((char*)buffer, "OK") != NULL)
 		{
 			memset(buffer, 0, sizeof(buffer));
@@ -91,7 +102,6 @@ void COMMS_Init(COMMS_State_t *state)
 
 bool COMMS_Process(COMMS_AT_Command_t *command, COMMS_State_t *state)
 {
-	static uint8_t flag_send = 0;
 	static COMMS_ParsedCmd_t parsed = COMMS_CMD_NONE;
 	*state = COMMS_STATE_IDLE;
 
@@ -108,10 +118,12 @@ bool COMMS_Process(COMMS_AT_Command_t *command, COMMS_State_t *state)
 		if(flag_send == 0)
 		{
 			HW_COMMS_Transmit((uint8_t*)"AT+SEND\r\n", 9);
+			HW_COMMS_StartTimeout(250);
 			flag_send = 1;
 			break;
 		}
 		if(parsed == COMMS_CMD_OK){
+			HW_COMMS_StopTimeout();
 			COMMS_SendData();
 			*command = AT_STATUS;
 			flag_send = 0;
@@ -120,8 +132,8 @@ bool COMMS_Process(COMMS_AT_Command_t *command, COMMS_State_t *state)
 		if(HW_COMMS_TimeoutExpired())
 		{
 			flag_send = 1;
-			break;
 			return false;
+
 		}
 
 
@@ -138,6 +150,7 @@ bool COMMS_SendCommand(COMMS_AT_Command_t *command, float *ptr_data, uint16_t pt
 	switch(*command)
 	{
 	case AT_SEND:
+		flag_send = 0;
 		data = ptr_data;
 		size = ptr_size;
 		break;
