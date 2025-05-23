@@ -7,12 +7,14 @@ import time
 # === CONFIGURAÇÃO SERIAL E HTTP ===
 COM_PORT = 'COM3'          # Altere para sua porta
 BAUD_RATE = 115200
-LOGIN_ENDPOINT = "http://192.168.15.157:8080/auth/login"
-SEND_ENDPOINT = ""
+LOGIN_ENDPOINT = "http://localhost:8080/auth/login"
+SEND_ENDPOINT = "http://localhost:8080/measurements"
+
+UUID_USER = "a63f809e-f9a2-462d-a5c5-5fe1a6482a10"
 
 payload = {
-    "email": "lelezinho@email.com",
-    "password": "266468"
+    "email": "Kaique@gmail.com",
+    "password": "123456"
 }
 
 
@@ -47,6 +49,11 @@ values = {
     "pAtiva": 0.0,
     "pReativa": 0.0,
     "fatorPotencia": 0.0
+}
+
+COMMANDS_TO_STM = {
+    "AT+RELE_ON": "OK",
+    "AT+RELE_OFF": "OK",
 }
 
 # === PARSE DE COMANDOS ===
@@ -86,35 +93,45 @@ def esperar_ok(ser, timeout=2):
 
 # === LOOP PRINCIPAL ===
 def simulate_esp():
+    token = None
     # try:
     #     response = requests.post(LOGIN_ENDPOINT, json=payload)
     #     if response.status_code == 200:
-    #         print("Login realizado com sucesso!")
-    #         print("Token ou resposta:", response.json())
+    #         token = response.json().get("token")
+    #         print("Login realizado com sucesso.")
+    #         print("Token:", token)
     #     else:
-    #         print(f"Erro ao fazer login: {response.status_code}")
-    #         print(response.text)
-    
-    # except requests.exceptions.RequestException as e:
-    #     print(f"Erro na requisição: {e}")
+    #         print("Falha no login:", response.text)
+    #         return
+    # except Exception as e:
+    #     print("Erro de login:", e)
+    #     return
         
 
-    last_time_trigger = time.time()
-    value = False
+    
+    
     try:
         with serial.Serial(COM_PORT, BAUD_RATE, timeout=1) as ser:
             print(f"Simulador AT em {COM_PORT} @ {BAUD_RATE}")
+            last_time_trigger = time.time()
+            value = False 
+            response_command_stm = ""
+            
             while True:
                 current_time = time.time()
-                if current_time - last_time_trigger >= 30:
+                if current_time - last_time_trigger >= 10:
                     print(f"Comando enviado: {'AT+RELE_ON' if value else 'AT+RELE_OFF'}")
                     if value == True:
-                        ser.write(('AT+RELE_ON' + "\r\n").encode())
+                        response_command_stm = "AT+RELE_ON"
                         value = False
                     else:
+                        response_command_stm = "AT+RELE_OFF"
                         value = True
-                        ser.write(('AT+RELE_OFF' + "\r\n").encode())
-                    esperar_ok(ser, 2)
+
+                    ser.write((response_command_stm + "\r\n").encode())
+                    while not esperar_ok(ser, 0.25):
+                        ser.write((response_command_stm + "\r\n").encode())
+                        
                     last_time_trigger = current_time
                     
                 if ser.in_waiting:
@@ -142,7 +159,27 @@ def simulate_esp():
                             print("\nValores atualizados:")
                             for key, val in values.items():
                                 print(f"    {key}: {val}")
+                            # if token:
+                            #     print("\nEnviando dados para o servidor...")
+                            #     json_payload = {
+                            #         "v_eficaz": values["vEficaz"],
+                            #         "i_eficaz": values["iEficaz"],
+                            #         "p_aparente": values["pAparente"],
+                            #         "p_ativa": values["pAtiva"],
+                            #         "p_reativa": values["pReativa"],
+                            #         "fator_potencia": values["fatorPotencia"],
+                            #         "user_id": UUID_USER
+                            #     }
 
+                            #     headers = {
+                            #         "Authorization": f"Bearer {token}"
+                            #     }
+
+                            #     try:
+                            #         r = requests.post(SEND_ENDPOINT, json=json_payload, headers=headers)
+                            #         print(f"\n[POST] Status: {r.status_code} - {r.text}")
+                            #     except Exception as e:
+                            #         print(f"[POST] Erro ao enviar: {e}")
                             #ser.write(("OK\r\n").encode())
 
                         except Exception as e:
