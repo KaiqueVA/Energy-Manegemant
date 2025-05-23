@@ -50,6 +50,11 @@ void HW_COMMS_StartTimeout(uint32_t timeout_ms)
 	HAL_TIM_Base_Start_IT(&htim4);
 }
 
+void HW_COMMS_StopTimeout(void)
+{
+	hw_timeout_flag = false;
+	HAL_TIM_Base_Stop_IT(&htim4);
+}
 
 bool HW_COMMS_TimeoutExpired(void)
 {
