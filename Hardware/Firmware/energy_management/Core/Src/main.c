@@ -135,6 +135,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  tickAnt = HAL_GetTick();
   while (1)
   {
 	switch(state)
