@@ -14,18 +14,16 @@
 extern uint8_t flag_time_out;
 // ========== Funções Internas ========== //
 
-#define NCoef 2
+#define NCoef 1
 float iir(float NewSample) {
     float ACoef[NCoef+1] = {
-        0.09024282337497788200,
-        0.18048564674995576000,
-        0.09024282337497788200
+        0.05921059165970496400,
+        0.05921059165970496400
     };
 
     float BCoef[NCoef+1] = {
         1.00000000000000000000,
-        -0.98923277241909324000,
-        0.35020406031482593000
+        -0.88161859236318907000
     };
 
     static float y[NCoef+1]; //output samples
@@ -49,6 +47,8 @@ float iir(float NewSample) {
 
 
 
+
+
 // ========== Funções Públicas ========== //
 
 
@@ -69,7 +69,7 @@ void set_energy_calibration(adc_calibration_t *calc, float calI, float calV, flo
 
 void adc_buffer_separator(adc_data_t *data, adc_calibration_t *calc, uint16_t *buffer, uint16_t size)
 {
-	float v_data[512], i_data[512];
+	uint16_t v_data[512], i_data[512];
 
 	for(int j = 0; j < 8; j++)
 	{
@@ -82,7 +82,7 @@ void adc_buffer_separator(adc_data_t *data, adc_calibration_t *calc, uint16_t *b
 
 		v_data[i] = buffer[i * 2];
 		i_data[i] = buffer[i * 2 + 1];
-		//i_data[i] = iir(i_data[i]); // IIR filter temporarily disabled for testing raw ADC data processing.
+		i_data[i] = (uint16_t)iir(i_data[i]); // IIR filter temporarily disabled for testing raw ADC data processing.
 
 		data->vData[i] = v_data[i];
 		data->vData[i] = (((v_data[i])*(3.3/4095.0)) - calc->offsetV) * calc->calV;
