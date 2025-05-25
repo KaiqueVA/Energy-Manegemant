@@ -15,7 +15,7 @@ extern uint8_t flag_time_out;
 // ========== Funções Internas ========== //
 
 #define NCoef 1
-float iir(float NewSample) {
+float iir_to_ampere(float NewSample) {
     float ACoef[NCoef+1] = {
         0.05921059165970496400,
         0.05921059165970496400
@@ -45,6 +45,36 @@ float iir(float NewSample) {
     return y[0];
 }
 
+#define NCoef 1
+float iir_to_voltage(float NewSample) {
+    float ACoef[NCoef+1] = {
+        0.05921059165970496400,
+        0.05921059165970496400
+    };
+
+    float BCoef[NCoef+1] = {
+        1.00000000000000000000,
+        -0.88161859236318907000
+    };
+
+    static float y[NCoef+1]; //output samples
+    static float x[NCoef+1]; //input samples
+    int n;
+
+    //shift the old samples
+    for(n=NCoef; n>0; n--) {
+       x[n] = x[n-1];
+       y[n] = y[n-1];
+    }
+
+    //Calculate the new output
+    x[0] = NewSample;
+    y[0] = ACoef[0] * x[0];
+    for(n=1; n<=NCoef; n++)
+        y[0] += ACoef[n] * x[n] - BCoef[n] * y[n];
+
+    return y[0];
+}
 
 
 
@@ -81,8 +111,9 @@ void adc_buffer_separator(adc_data_t *data, adc_calibration_t *calc, uint16_t *b
 	{
 
 		v_data[i] = buffer[i * 2];
+		v_data[i] = (uint16_t)iir_to_voltage(v_data[i]); // IIR filter temporarily disabled for testing raw ADC data processing.
 		i_data[i] = buffer[i * 2 + 1];
-		i_data[i] = (uint16_t)iir(i_data[i]); // IIR filter temporarily disabled for testing raw ADC data processing.
+		i_data[i] = (uint16_t)iir_to_ampere(i_data[i]); // IIR filter temporarily disabled for testing raw ADC data processing.
 
 		data->vData[i] = v_data[i];
 		data->vData[i] = (((v_data[i])*(3.3/4095.0)) - calc->offsetV) * calc->calV;
