@@ -101,11 +101,6 @@ void adc_buffer_separator(adc_data_t *data, adc_calibration_t *calc, uint16_t *b
 {
 	uint16_t v_data[512], i_data[512];
 
-	for(int j = 0; j < 8; j++)
-	{
-
-	}
-
 
 	for(int i = 0; i < size; i++)
 	{
