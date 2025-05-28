@@ -128,13 +128,15 @@ int main(void)
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   float ical = 11.5;
+  float vcal = 538; //460
   init_energy_engine(&energy_engine);
-  set_energy_calibration(&adc_calibration, ical, 460, 1.65, 1.66);
+  set_energy_calibration(&adc_calibration, ical, vcal, 1.65, 1.66);
   COMMS_Init(&comms_state);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  tickAnt = HAL_GetTick();
   while (1)
   {
 	switch(state)
