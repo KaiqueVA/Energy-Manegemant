@@ -1,3 +1,6 @@
-<div class="flex items-center bg-dashboard-block text-white p-6 h-full">
+<div class="flex flex-col items-center bg-dashboard-block text-white p-6 h-full">
+    <div>
+        <h1 class="text-xl font-bold uppercase mb-4">Consumo dos últimos 7 dias</h1>
+    </div>
     <canvas baseChart [data]="cfg.data" [type]="cfg.type" [options]="cfg.options"> </canvas>
 </div>

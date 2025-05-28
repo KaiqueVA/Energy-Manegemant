@@ -9,7 +9,7 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent {
-  labels = ['a', 'b', 'c', 'd', 'f', 'g'];
+  labels = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
 
   cfg: any = {
     type: 'line',

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LegendaDonutComponent } from './legenda-donut.component';
+import { SwitchTomadaComponent } from './switch-tomada.component';
 
-describe('LegendaDonutComponent', () => {
-  let component: LegendaDonutComponent;
-  let fixture: ComponentFixture<LegendaDonutComponent>;
+describe('SwitchTomadaComponent', () => {
+  let component: SwitchTomadaComponent;
+  let fixture: ComponentFixture<SwitchTomadaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LegendaDonutComponent]
+      imports: [SwitchTomadaComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(LegendaDonutComponent);
+    fixture = TestBed.createComponent(SwitchTomadaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

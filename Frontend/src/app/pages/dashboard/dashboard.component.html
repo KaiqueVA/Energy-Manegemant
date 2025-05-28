@@ -1,20 +1,23 @@
-<main class="flex flex-col justify-center items-center w-full py-8 min-h-screen">
-    <div class="text-center text-white mb-8">
-        <h1 class="uppercase text-6xl font-bold mb-3">PowerPeak</h1>
-        <h3 class="text-xl">Bem-vindo, {{username}}</h3>
+<main
+  class="flex flex-col justify-center items-center w-full py-8 min-h-screen"
+>
+  <div class="flex flex-col gap-8 items-center text-center text-white mb-8">
+    <h1 class="uppercase text-6xl font-bold">PowerPeak</h1>
+    <h3 class="text-xl">Bem-vindo, {{ username }}</h3>
+    <app-switch-tomada [ativo]="meuValor"> </app-switch-tomada>
+  </div>
+  <div class="grid lg:grid-cols-2 gap-3">
+    <div>
+      <app-visao-geral></app-visao-geral>
     </div>
-    <div class="grid lg:grid-cols-2 gap-3">
-        <div>
-            <app-visao-geral></app-visao-geral>
-        </div>
-        <div>
-            <app-grafico-donut></app-grafico-donut>
-        </div>
-        <div>
-            <app-line-chart></app-line-chart>
-        </div>
-        <div>
-            <app-historico></app-historico>
-        </div>
+    <div>
+      <app-grafico-donut></app-grafico-donut>
     </div>
+    <div>
+      <app-line-chart></app-line-chart>
+    </div>
+    <div>
+      <app-historico></app-historico>
+    </div>
+  </div>
 </main>

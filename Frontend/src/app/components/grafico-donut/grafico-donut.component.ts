@@ -9,9 +9,9 @@ import { Component, Input } from '@angular/core';
 })
 export class GraficoDonutComponent {
   @Input() data = [
-    { label: 'Verde', value: 40, color: '#4caf50' },
-    { label: 'Laranja', value: 30, color: '#ff9800' },
-    { label: 'Azul', value: 30, color: '#2196f3' },
+    { label: 'Quarto', value: 40, color: '#4caf50' },
+    { label: 'Sala', value: 30, color: '#ff9800' },
+    { label: 'Cozinha', value: 30, color: '#2196f3' },
   ];
 
   get total() {

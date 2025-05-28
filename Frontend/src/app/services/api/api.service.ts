@@ -29,6 +29,25 @@ export class ApiService {
       .catch(error => console.error("Erro ao registar!", error));
   }
 
+  async fetchLogin(user: User) {
+    return fetch(this.api_url + 'auth/register', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + this.api_token,
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        sessionStorage.setItem('token', result.token);
+        sessionStorage.setItem('name', result.name);
+        return true;
+      })
+      .catch(error => console.error("Erro ao registar!", error));
+  }
+
   fetchMeasurements() {
     fetch(this.api_url + 'auth/register', {
       headers: {
