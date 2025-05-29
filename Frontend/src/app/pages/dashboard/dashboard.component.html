@@ -1,12 +1,70 @@
 <main
   class="flex flex-col justify-center items-center w-full py-8 min-h-screen"
 >
-  <div class="flex flex-col gap-8 items-center text-center text-white mb-8">
-    <h1 class="uppercase text-6xl font-bold">PowerPeak</h1>
-    <h3 class="text-xl">Bem-vindo, {{ username }}</h3>
-    <app-switch-tomada [ativo]="meuValor"> </app-switch-tomada>
+  <div
+    class="flex justify-between items-center py-4 px-16 text-white mb-8 bg-transparent w-full"
+  >
+    <!-- Título -->
+    <div class="flex flex-col gap-2">
+      <h1 class="uppercase text-4xl font-bold">PowerPeak</h1>
+      <div class="flex gap-2 items-center text-gray-400 text-sm">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="8.5" r="3.5" />
+          <path d="M6.5 18c1-2.5 4-4 5.5-4s4.5 1.5 5.5 4" />
+        </svg>
+
+        <p>Bem-vindo, {{ username }}</p>
+      </div>
+    </div>
+
+    <!-- Controles -->
+    <div class="flex items-center gap-6">
+      <!-- Switch para tomada -->
+      <app-switch-tomada [ativo]="meuValor"></app-switch-tomada>
+
+      <!-- Botão de dados brutos -->
+      <button class="bg-blue-500 text-white text-sm font-medium p-1.5 rounded">
+        Visualizar Dados Brutos
+      </button>
+
+      <!-- Botão Logout -->
+      <button
+        (click)="logout()"
+        class="bg-red-400 hover:bg-red-300 transition-colors rounded p-1 flex gap-2 font-medium"
+        title="Sair"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-log-out"
+          viewBox="0 0 24 24"
+        >
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+      </button>
+    </div>
   </div>
-  <div class="grid lg:grid-cols-2 gap-3">
+
+  <div class="grid lg:grid-cols-2 gap-3 w-full px-16">
     <div>
       <app-visao-geral></app-visao-geral>
     </div>

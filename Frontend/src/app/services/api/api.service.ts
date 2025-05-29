@@ -30,7 +30,7 @@ export class ApiService {
   }
 
   async fetchLogin(user: User) {
-    return fetch(this.api_url + 'auth/register', {
+    return fetch(this.api_url + 'auth/login', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -41,11 +41,12 @@ export class ApiService {
     })
       .then((response) => response.json())
       .then((result) => {
+        console.log(result);
         sessionStorage.setItem('token', result.token);
         sessionStorage.setItem('name', result.name);
         return true;
       })
-      .catch(error => console.error("Erro ao registar!", error));
+      .catch(error => console.error("Erro ao fazer login!", error));
   }
 
   fetchMeasurements() {

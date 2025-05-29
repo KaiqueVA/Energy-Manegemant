@@ -1,12 +1,12 @@
 <main class="main-login-form">
   <h1 class="login-title">PowerPeak</h1>
-  <form class="login-form">
+  <form class="login-form" (ngSubmit)="onSubmit()">
     <h1 class="title">Entrar</h1>
     <div class="form-content">
       <ul class="inputs">
         <div class="custom-input">
           <label class="font-semibold" for="email">Seu email</label>
-          <input [(ngModel)]="user.email" type="email" id="email" required />
+          <input [(ngModel)]="user.email" type="email" id="email" name="email" required />
         </div>
         <div class="custom-input">
           <label class="font-semibold" for="password">Crie uma senha</label>
@@ -14,11 +14,12 @@
             [(ngModel)]="user.password"
             type="password"
             id="password"
+            name="password"
             required
           />
         </div>
       </ul>
-      <button class="form-submit">Entrar</button>
+      <button class="form-submit" type="submit">Entrar</button>
       <section class="flex flex-col gap-2">
         <button>Esqueci minha senha</button>
         <a href="/register">Ainda não tenho um cadastro</a>
