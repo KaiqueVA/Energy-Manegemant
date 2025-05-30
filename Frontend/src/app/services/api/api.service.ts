@@ -50,13 +50,13 @@ export class ApiService {
   }
 
   fetchMeasurements() {
-    fetch(this.api_url + 'auth/register', {
+    fetch(this.api_url + 'measurements', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + sessionStorage.getItem('token'),
       },
     })
-      .then((response) => response.json())
+      .then((response) => response.text())
       .then((result) => {
         console.log(result);
       });

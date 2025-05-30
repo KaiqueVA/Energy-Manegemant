@@ -5,6 +5,7 @@ import { LineChartComponent } from '../../components/line-chart/line-chart.compo
 import { HistoricoComponent } from '../../components/historico/historico.component';
 import { SwitchTomadaComponent } from '../../components/switch-tomada/switch-tomada.component';
 import { Router } from '@angular/router';
+import { ApiService } from '../../services/api/api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,8 +17,12 @@ export class DashboardComponent {
   username = sessionStorage.getItem('name');
   meuValor = false;
 
-  constructor(private router: Router){
+  constructor(private router: Router, private apiService: ApiService){
 
+  }
+
+  ngOnInit(){
+    this.apiService.fetchMeasurements();
   }
 
   logout(){
