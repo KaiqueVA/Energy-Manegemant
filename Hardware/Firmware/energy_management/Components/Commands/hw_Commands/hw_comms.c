@@ -8,7 +8,7 @@ static volatile bool hw_timeout_flag = false;
 
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	if (huart->Instance == USART1) {
+	if (huart->Instance == USART3) {
 		flag_receive = 1;
 
 	}
@@ -30,11 +30,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 bool HW_COMMS_Transmit(uint8_t *data, uint16_t length) {
-    return (HAL_UART_Transmit(&huart1, data, length, 1000) == HAL_OK);
+    return (HAL_UART_Transmit(&huart3, data, length, 1000) == HAL_OK);
 }
 
 bool HW_COMMS_Receive(uint8_t *buffer, uint16_t length) {
-    return (HAL_UART_Receive(&huart1, buffer, length, 1000) == HAL_OK);
+    return (HAL_UART_Receive(&huart3, buffer, length, 1000) == HAL_OK);
 
 }
 
