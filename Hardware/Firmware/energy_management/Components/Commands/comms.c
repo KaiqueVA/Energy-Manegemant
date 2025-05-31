@@ -82,7 +82,7 @@ void COMMS_Init(COMMS_State_t *state)
 {
 	uint16_t prev_tick = HAL_GetTick();
 	HW_COMMS_Transmit((uint8_t*)"AT+INIT\r\n", 9);
-	HAL_UART_Receive_DMA(&huart1, (uint8_t*)buffer, 12);
+	HAL_UART_Receive_DMA(&huart3, (uint8_t*)buffer, 12);
 	while(1)
 	{
 		if(HAL_GetTick() - prev_tick > 1000)
