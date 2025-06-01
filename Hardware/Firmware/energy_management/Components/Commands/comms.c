@@ -56,14 +56,16 @@ COMMS_ParsedCmd_t COMMS_ParseReceivedBuffer(void)
     {
     	memset(buffer, 0, sizeof(buffer));
         HW_COMMS_Transmit((uint8_t *)"OK\r\n", 4);
+        HAL_GPIO_WritePin(RELE_GPIO_Port, RELE_Pin, GPIO_PIN_RESET);
         result = COMMS_CMD_RELE_ON;
-        memset(buffer, 0, sizeof(buffer));
+
 
     }
     else if (strstr(buffer, "AT+RELE_OFF") != NULL)
     {
     	memset(buffer, 0, sizeof(buffer));
         HW_COMMS_Transmit((uint8_t *)"OK\r\n", 4);
+        HAL_GPIO_WritePin(RELE_GPIO_Port, RELE_Pin, GPIO_PIN_SET);
         result = COMMS_CMD_RELE_OFF;
 
     }
