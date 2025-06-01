@@ -48,7 +48,7 @@ bool COMMS_SendData()
 		return true;
 }
 
-COMMS_ParsedCmd_t COMMS_ParseReceivedBuffer(void)
+COMMS_ParsedCmd_t COMMS_ParseReceivedBuffer(COMMS_AT_Command_t *command)
 {
     COMMS_ParsedCmd_t result = COMMS_CMD_NONE;
 
@@ -56,8 +56,9 @@ COMMS_ParsedCmd_t COMMS_ParseReceivedBuffer(void)
     {
     	memset(buffer, 0, sizeof(buffer));
         HW_COMMS_Transmit((uint8_t *)"OK\r\n", 4);
-        HAL_GPIO_WritePin(RELE_GPIO_Port, RELE_Pin, GPIO_PIN_RESET);
+        //HAL_GPIO_WritePin(RELE_GPIO_Port, RELE_Pin, GPIO_PIN_RESET);
         result = COMMS_CMD_RELE_ON;
+        *command = AT_RELE;
 
 
     }
@@ -65,9 +66,9 @@ COMMS_ParsedCmd_t COMMS_ParseReceivedBuffer(void)
     {
     	memset(buffer, 0, sizeof(buffer));
         HW_COMMS_Transmit((uint8_t *)"OK\r\n", 4);
-        HAL_GPIO_WritePin(RELE_GPIO_Port, RELE_Pin, GPIO_PIN_SET);
+        //HAL_GPIO_WritePin(RELE_GPIO_Port, RELE_Pin, GPIO_PIN_SET);
         result = COMMS_CMD_RELE_OFF;
-
+        *command = AT_RELE;
     }
     else if (strstr(buffer, "OK\r\n") != NULL)
     {
@@ -105,17 +106,31 @@ void COMMS_Init(COMMS_State_t *state)
 bool COMMS_Process(COMMS_AT_Command_t *command, COMMS_State_t *state)
 {
 	static COMMS_ParsedCmd_t parsed = COMMS_CMD_NONE;
+	COMMS_AT_Command_t command_aux = *command;
 	*state = COMMS_STATE_IDLE;
+
 
 	if(flag_receive == 1)
 	{
-		parsed = COMMS_ParseReceivedBuffer();
+		parsed = COMMS_ParseReceivedBuffer(command);
 
 	}
 
 
 	switch(*command)
 	{
+	case AT_RELE:
+		if(parsed == COMMS_CMD_RELE_ON)
+		{
+	        HAL_GPIO_WritePin(RELE_GPIO_Port, RELE_Pin, GPIO_PIN_RESET);
+	        *command = command_aux;
+
+		}
+		else if(parsed == COMMS_CMD_RELE_OFF)
+		{
+	        HAL_GPIO_WritePin(RELE_GPIO_Port, RELE_Pin, GPIO_PIN_SET);
+	        *command = command_aux;
+		}
 	case AT_SEND:
 		if(flag_send == 0)
 		{
@@ -137,8 +152,6 @@ bool COMMS_Process(COMMS_AT_Command_t *command, COMMS_State_t *state)
 			return false;
 
 		}
-
-
 		break;
 	default:
 		return false;
