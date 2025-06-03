@@ -9,7 +9,7 @@
 
 
 //Configure a UART
-extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart1;
 
 void hw_log_init(void) {
     // void
@@ -22,6 +22,6 @@ int __io_putchar(int ch) {
 
 int hw_log_putchar(int ch) {
     uint8_t c = ch;
-    HAL_UART_Transmit(&huart2, &c, 1, 10);
+    HAL_UART_Transmit(&huart1, &c, 1, 10);
     return ch;
 }
