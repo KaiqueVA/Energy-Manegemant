@@ -10,7 +10,7 @@
 #include "energy_calculator.h"
 #include "math.h"
 // ========== Variáveis Internas ========== //
-
+uint8_t flag_count_adc = 0;
 extern uint8_t flag_time_out;
 // ========== Funções Internas ========== //
 
@@ -102,6 +102,7 @@ void adc_buffer_separator(adc_data_t *data, adc_calibration_t *calc, uint16_t *b
 	uint16_t v_data[512], i_data[512];
 
 
+
 	for(int i = 0; i < size; i++)
 	{
 
@@ -110,12 +111,17 @@ void adc_buffer_separator(adc_data_t *data, adc_calibration_t *calc, uint16_t *b
 		i_data[i] = buffer[i * 2 + 1];
 		i_data[i] = (uint16_t)iir_to_ampere(i_data[i]); // IIR filter temporarily disabled for testing raw ADC data processing.
 
+
+
 		data->vData[i] = v_data[i];
 		data->vData[i] = (((v_data[i])*(3.3/4095.0)) - calc->offsetV) * calc->calV;
 
 
-		data->iData[i] = i_data[i];
-		data->iData[i] = ((i_data[i]*(3.3/4095.0))- calc->offsetI) * calc->calI;
+		float v_inst   = (i_data[i] * (3.3 / 4095.0));
+		float v_burden = v_inst - calc->offsetI;          // remove offset de 1,65 V
+		float i_prim   = v_burden * calc->calI;        // converte V_b em corrente primária (Ip = V_b * 10)
+
+		data->iData[i] = i_prim;
 
 	}
 
@@ -149,10 +155,11 @@ int state_energy_calculator(adc_data_t *data, adc_calibration_t *calc, uint16_t 
 {	static uint16_t count = 1;
 
 	data->vEficaz = rms_calculator(data->vData, 512);
+
 	data->iEficaz = rms_calculator(data->iData, 512);
 
-	if(data->iEficaz < 0.21)
-		data->iEficaz = 0.0;
+	if(data->iEficaz < 0.24)
+		data->iEficaz = 0;
 
 	if(count == 1){
 		data->vAVG = 0;
@@ -199,6 +206,7 @@ int state_energy_calculator(adc_data_t *data, adc_calibration_t *calc, uint16_t 
 		data->pReativa = sqrt((data->pAparente * data->pAparente) - (data->pAtiva * data->pAtiva));
 		count = 1;
 		flag_time_out = 0;
+
 
 		//return DATA_PROCESSING;
 	}
