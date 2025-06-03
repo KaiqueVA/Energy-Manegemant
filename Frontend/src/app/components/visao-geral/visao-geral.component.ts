@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GaugeConsumoComponent } from '../gauge-consumo/gauge-consumo.component';
 
 @Component({
@@ -8,5 +8,6 @@ import { GaugeConsumoComponent } from '../gauge-consumo/gauge-consumo.component'
   styleUrl: './visao-geral.component.scss'
 })
 export class VisaoGeralComponent {
-
+  @Input() valor_kwh:any;
+  @Input() total_kwh:any;
 }

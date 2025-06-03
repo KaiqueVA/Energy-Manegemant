@@ -30,6 +30,16 @@
 
     <!-- Controles -->
     <div class="flex items-center gap-6">
+      <div class="custom-input text-sm w-38">
+        <label class="font-semibold" for="tarifa">Insira a tarifa de kWh</label>
+        <input
+          [(ngModel)]="tarifa"
+          type="text"
+          id="tarifa"
+          name="tarifa"
+        />
+      </div>
+
       <!-- Switch para tomada -->
       <app-switch-tomada [ativo]="meuValor"></app-switch-tomada>
 
@@ -66,7 +76,7 @@
 
   <div class="grid lg:grid-cols-2 gap-3 w-full px-16">
     <div>
-      <app-visao-geral></app-visao-geral>
+      <app-visao-geral [valor_kwh]="kwh" [total_kwh]="total_kwh"></app-visao-geral>
     </div>
     <div>
       <app-grafico-donut></app-grafico-donut>

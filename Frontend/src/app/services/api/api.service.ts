@@ -49,16 +49,16 @@ export class ApiService {
       .catch(error => console.error("Erro ao fazer login!", error));
   }
 
-  fetchMeasurements() {
-    fetch(this.api_url + 'measurements', {
+  async fetchMeasurements() {
+    return fetch(this.api_url + 'measurements', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + sessionStorage.getItem('token'),
       },
     })
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((result) => {
-        console.log(result);
+        return result;
       });
   }
 }
