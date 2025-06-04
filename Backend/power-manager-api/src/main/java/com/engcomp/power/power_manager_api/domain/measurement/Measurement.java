@@ -3,7 +3,9 @@ package com.engcomp.power.power_manager_api.domain.measurement;
 import com.engcomp.power.power_manager_api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -28,4 +30,8 @@ public class Measurement {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 }

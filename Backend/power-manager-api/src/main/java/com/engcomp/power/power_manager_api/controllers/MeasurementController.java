@@ -23,6 +23,21 @@ public class MeasurementController {
         return ResponseEntity.ok(service.findAll());
     }
 
+    @GetMapping("/today")
+    public ResponseEntity<List<MeasurementDTO>> getToday() {
+        return ResponseEntity.ok(service.getToday());
+    }
+
+    @GetMapping("/this-week")
+    public ResponseEntity<List<MeasurementDTO>> getThisWeek() {
+        return ResponseEntity.ok(service.getThisWeek());
+    }
+
+    @GetMapping("/last-7-days")
+    public ResponseEntity<List<MeasurementDTO>> getLast7Days() {
+        return ResponseEntity.ok(service.getLast7Days());
+    }
+
     @PostMapping
     public ResponseEntity<MeasurementDTO> create(@RequestBody MeasurementDTO dto) {
         return ResponseEntity.ok(service.save(dto));

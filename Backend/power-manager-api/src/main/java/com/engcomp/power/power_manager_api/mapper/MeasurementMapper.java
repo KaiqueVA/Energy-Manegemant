@@ -3,6 +3,7 @@ package com.engcomp.power.power_manager_api.mapper;
 import com.engcomp.power.power_manager_api.domain.measurement.Measurement;
 import com.engcomp.power.power_manager_api.dto.MeasurementDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.UUID;
 
