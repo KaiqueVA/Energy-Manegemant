@@ -7,6 +7,7 @@ import { SwitchTomadaComponent } from '../../components/switch-tomada/switch-tom
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api/api.service';
 import { FormsModule } from '@angular/forms';
+import { MeasurementsService } from '../../services/measurements/measurements.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,29 +26,14 @@ export class DashboardComponent {
   username = sessionStorage.getItem('name');
   meuValor = false;
   tarifa = 3;
-  measurements = [];
-  kwh = 0;
-  total_kwh = 0;
 
-  constructor(private router: Router, private apiService: ApiService) {}
+  constructor(private router: Router, private measurementService : MeasurementsService) {}
 
   async ngOnInit() {
-    this.apiService.fetchMeasurements().then((result) => {
-      console.log(result);
-      this.measurements = result;
-      this.kwh = this.convertTokwh();
-      this.total_kwh = (this.kwh * this.tarifa);
-    });
+    this.measurementService.getSevenDays();
   }
 
-  convertTokwh(intervaloSegundos = 2) {
-    const energiaTotalKWh = this.measurements.reduce((total, medida:any) => {
-      const energiaKWh = (medida.p_ativa * intervaloSegundos) / 3600000;
-      return total + energiaKWh;
-    }, 0);
-
-    return Number(energiaTotalKWh.toFixed(6));
-  }
+  
 
   logout() {
     sessionStorage.clear();
