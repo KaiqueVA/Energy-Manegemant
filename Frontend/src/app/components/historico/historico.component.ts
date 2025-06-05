@@ -1,5 +1,5 @@
 import { NgForOf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MeasurementsService } from '../../services/measurements/measurements.service';
 
 @Component({
@@ -11,10 +11,19 @@ import { MeasurementsService } from '../../services/measurements/measurements.se
 export class HistoricoComponent {
 
   dadosConsumo: any;
+  @Input() tarifa:any;
 
   constructor(private measurementService: MeasurementsService) {}
   async ngOnInit() {
-    this.dadosConsumo = (await this.measurementService.getSevenDays()).consumoPorDia;
+    this.dadosConsumo = (await this.measurementService.getSevenDays());
     console.log(this.dadosConsumo);
+    this.dadosConsumo.map((e:any) => {
+      e.valor_total = e.kwh * this.tarifa;
+      e.data = new Date(e.data).toLocaleDateString();
+    })
+
+    this.dadosConsumo.reverse();
+
+    this.dadosConsumo.shift();
   }
 }

@@ -25,7 +25,7 @@ import { MeasurementsService } from '../../services/measurements/measurements.se
 export class DashboardComponent {
   username = sessionStorage.getItem('name');
   meuValor = false;
-  tarifa = 3;
+  tarifa = Number(localStorage.getItem('tarifa')) || 0.5;
 
   constructor(private router: Router, private measurementService : MeasurementsService) {}
 
@@ -33,7 +33,12 @@ export class DashboardComponent {
     this.measurementService.getSevenDays();
   }
 
-  
+  setTarifa(event: Event){
+    const input = event.target as HTMLInputElement;
+    this.tarifa = Number(input.value);
+    localStorage.setItem('tarifa', String(this.tarifa));
+    window.location.reload();
+  }
 
   logout() {
     sessionStorage.clear();

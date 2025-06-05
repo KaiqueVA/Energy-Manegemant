@@ -53,7 +53,7 @@ export class ApiService {
     return fetch(this.api_url + 'measurements/'+date, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer 123',
+        Authorization: 'Bearer '+sessionStorage.getItem('token'),
       },
     })
       .then((response) => response.json())

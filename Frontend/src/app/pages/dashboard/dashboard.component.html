@@ -33,6 +33,7 @@
       <div class="custom-input text-sm w-38">
         <label class="font-semibold" for="tarifa">Insira a tarifa de kWh</label>
         <input
+          (change)="setTarifa($event)"
           [(ngModel)]="tarifa"
           type="text"
           id="tarifa"
@@ -85,7 +86,7 @@
       <app-line-chart></app-line-chart>
     </div>
     <div>
-      <app-historico></app-historico>
+      <app-historico [tarifa]="tarifa"></app-historico>
     </div>
   </div>
 </main>

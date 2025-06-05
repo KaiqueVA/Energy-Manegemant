@@ -18,8 +18,8 @@ export class VisaoGeralComponent {
   }
 
   async ngOnInit(){
-    // this.consumo = (await this.measurementService.getToday()).consumoTotal;
-    this.valor_total = this.tarifa*this.consumo;
+    this.consumo = (await this.measurementService.getToday());
     console.log(this.consumo);
+    this.valor_total = this.tarifa*this.consumo;
   }
 }

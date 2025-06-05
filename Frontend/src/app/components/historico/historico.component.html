@@ -3,18 +3,18 @@
     <table class="min-w-full text-sm text-center">
       <thead>
         <tr
-          class="text-gray-200 uppercase tracking-wider border-b border-gray-200"
+          class="text-gray-200 tracking-wider border-b border-gray-200"
         >
-          <th class="py-3">Dia</th>
-          <th class="py-3">Consumo (kWh)</th>
+          <th class="py-3">DATA</th>
+          <th class="py-3">CONSUMO (kWh)</th>
           <th class="py-3">R$</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let dia of dadosConsumo" class="border-b border-gray-600">
           <td class="py-3">{{dia.data}}</td>
-          <td class="py-3">{{dia.consumo}}</td>
-          <td class="py-3">{{dia.consumo*3}}</td>
+          <td class="py-3">{{dia.kwh.toFixed(2)}}</td>
+          <td class="py-3">{{dia.valor_total.toFixed(2)}}</td>
         </tr>
         
       </tbody>
