@@ -1,8 +1,6 @@
-<div class="grid grid-cols-2 gap-6 bg-dashboard-block text-white p-6 w-full">
+<div class="grid grid-cols-2 items-center gap-6 bg-dashboard-block text-white p-6 w-full h-full">
   <div>
     <app-gauge-consumo [value]="consumo" [min]="0" [max]="10" units="kWh" />
-    <p class="uppercase">Consumo Atual</p>
-    <p>Última Leitura - 00:00</p>
   </div>
   <div class="flex flex-col justify-center gap-2">
     <p class="uppercase text-gray-500">Custo estimado</p>
