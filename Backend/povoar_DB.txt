@@ -1,0 +1,31 @@
+DO $$
+DECLARE
+    ts timestamp := now() - interval '10 days';
+    end_ts timestamp := now();
+    step interval := interval '5 seconds';
+    user_id uuid := '4847b9ed-e916-448d-9749-0a1f57905a15';  -- troque pelo seu user
+BEGIN
+    WHILE ts < end_ts LOOP
+        INSERT INTO measurement (
+            created_at,
+            user_id,
+            v_eficaz,
+            i_eficaz,
+            p_aparente,
+            p_ativa,
+            p_reativa,
+            fator_potencia
+        ) VALUES (
+            ts,
+            user_id,
+            220 + random() * 5,    -- v_eficaz 220 ±5
+            5 + random() * 0.5,    -- i_eficaz 5 ±0.5
+            1100 + random() * 100, -- p_aparente 1100 ±100
+            900 + random() * 100,  -- p_ativa 900 ±100
+            300 + random() * 50,   -- p_reativa 300 ±50
+            0.8 + random() * 0.2   -- fator_potencia 0.8 a 1.0
+        );
+        ts := ts + step;
+    END LOOP;
+END;
+$$;
