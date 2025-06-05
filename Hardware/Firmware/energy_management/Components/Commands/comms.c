@@ -83,7 +83,26 @@ COMMS_ParsedCmd_t COMMS_ParseReceivedBuffer(COMMS_AT_Command_t *command)
 // ========== Funções Públicas ========== //
 void COMMS_Init(COMMS_State_t *state)
 {
-	uint16_t prev_tick = HAL_GetTick();
+	uint16_t prev_tick;
+
+	prev_tick = HAL_GetTick();
+	HW_COMMS_Transmit((uint8_t*)"AT+RESET\r\n", 9);
+	HAL_UART_Receive_DMA(&huart3, (uint8_t*)buffer, 12);
+	while(1)
+	{
+		if(HAL_GetTick() - prev_tick > 1000)
+		{
+			HW_COMMS_Transmit((uint8_t*)"AT+RESET\r\n", 9);
+			prev_tick = HAL_GetTick();
+		}
+		if(strstr((char*)buffer, "OK") != NULL)
+		{
+			memset(buffer, 0, sizeof(buffer));
+			break;
+		}
+	}
+	HAL_Delay(1000);
+	prev_tick = HAL_GetTick();
 	HW_COMMS_Transmit((uint8_t*)"AT+INIT\r\n", 9);
 	HAL_UART_Receive_DMA(&huart3, (uint8_t*)buffer, 12);
 	while(1)
