@@ -9,10 +9,13 @@ import com.engcomp.power.power_manager_api.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -58,6 +61,33 @@ public class MeasurementService {
 //                .map(this::addEnergyConsumption)
 //                .collect(Collectors.toList());
 //    }
+
+    public Double getTodayKwh(UUID userId) {
+        return repository.getTodayKwh(userId);
+    }
+
+    public List<Map<String, Object>> getThisWeekKwh(UUID userId) {
+        LocalDate startOfWeek = LocalDate.now().with(DayOfWeek.MONDAY);
+        LocalDateTime startDateTime = startOfWeek.atStartOfDay();
+        List<Object[]> results = repository.getThisWeekKwh(startDateTime, userId);
+        return convertToListOfMaps(results);
+    }
+
+    public List<Map<String, Object>> getLast7DaysKwh(UUID userId) {
+        List<Object[]> results = repository.getLast7DaysKwh(userId);
+        return convertToListOfMaps(results);
+    }
+
+    private List<Map<String, Object>> convertToListOfMaps(List<Object[]> results) {
+        return results.stream()
+                .map(row -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("data", ((Date) row[0]).toLocalDate());
+                    map.put("kwh", ((Number) row[1]).doubleValue());
+                    return map;
+                })
+                .collect(Collectors.toList());
+    }
 
     public List<MeasurementDTO> getToday() {
         return repository.findToday()

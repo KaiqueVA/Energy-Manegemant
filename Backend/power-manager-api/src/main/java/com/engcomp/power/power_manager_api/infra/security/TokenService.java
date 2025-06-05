@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class TokenService {
@@ -24,11 +25,26 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer("power-manager-api")
                     .withSubject(user.getEmail())
+                    .withClaim("userId", user.getId().toString())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
             return token;
         } catch (JWTCreationException exception) {
             throw new RuntimeException("Error while authenticating");
+        }
+    }
+
+    public UUID extractUserId(String token){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            String userIdStr = JWT.require(algorithm)
+                    .withIssuer("power-manager-api")
+                    .build()
+                    .verify(token)
+                    .getClaim("userId").asString();
+            return UUID.fromString(userIdStr);
+        } catch (JWTVerificationException exception){
+            return null;
         }
     }
 

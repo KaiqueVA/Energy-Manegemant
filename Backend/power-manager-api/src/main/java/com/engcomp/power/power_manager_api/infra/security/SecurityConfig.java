@@ -38,8 +38,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/measurements").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/measurements/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/measurements").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/measurements/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/relay/**").permitAll()
                         .anyRequest().authenticated()
                 )
